@@ -14,8 +14,8 @@ class CreateMeetTable extends Migration
     public function up()
     {
         Schema::create('meet', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+            $table->increments('id_meet');
+            $table->string('name_meeting');
             $table->text('description');
             $table->boolean('isOnline');
             $table->integer('limit')->default(1);
@@ -28,14 +28,14 @@ class CreateMeetTable extends Migration
             $table->unsignedInteger('user_id')->nullable();
 
             $table->foreign('room_id')
-                    ->references('id')
+                    ->references('id_room')
                     ->on('room')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');;
 
 
             $table->foreign('user_id')
-                    ->references('id')
+                    ->references('nip')
                     ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');;

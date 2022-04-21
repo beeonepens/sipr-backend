@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->increments('id');
+            $table->unsignedInteger('nip');
             $table->string('name');
             $table->enum('role',['admin','user']);
             $table->boolean('isActive')->default(true);
@@ -23,8 +23,11 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('avatarUrl')->nullable();
             $table->string('address')->nullable();
+            $table->enum('gender',['pria','wanita'])->nullable();
+            $table->date('dateofbirth')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->primary('nip');
         });
     }
 

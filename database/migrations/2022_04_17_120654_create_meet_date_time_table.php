@@ -14,9 +14,9 @@ class CreateMeetDateTimeTable extends Migration
     public function up()
     {
         Schema::create('meet_date_time', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('id_meet');
-            $table->datetime('datetime');
-            $table->primary('id_meet');
+            $table->string('datetime');
             //$table->primary('datetime');
         });
     }

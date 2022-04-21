@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MeetController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -21,6 +22,7 @@ use App\Http\Controllers\UserController;
 // });
 Route::get('user',[UserController::class, 'index']);
 Route::post('user/store',[UserController::class, 'store']);
+Route::post('meet/store/{id}',[MeetController::class, 'store']);
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
