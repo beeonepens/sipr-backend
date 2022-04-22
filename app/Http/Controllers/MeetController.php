@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Exception;
 use App\Models\Meet;
 use App\Models\DateMeet;
+use App\Models\MeetDate;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\MeetDate;
 
 class MeetController extends Controller
 {
@@ -23,7 +24,11 @@ class MeetController extends Controller
      */
     public function index()
     {
-        //
+        // $data = DB::table('meet')
+        //             ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+        //             ->select('meet.*','meet_date_time.datetime')
+        //             -> get();;
+        // return ApiFormatter::createApi($data, null, 'Succesfull');
     }
 
     /**
@@ -32,7 +37,7 @@ class MeetController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
         'name' => 'required|max:255',
@@ -51,13 +56,13 @@ class MeetController extends Controller
             $meet = Meet::create([
                 'name_meeting' => $request->name,
                 'description' => $request->description,
-                'limit' => $request->limit,
                 'isOnline' => $request->isOnline,
+                'limit' => $request->limit,
                 'room_id' => $request->room_id,
                 'user_id' => $request->user_id,
             ]);
 
-            // var_dump($meet->user_id);
+            // var_dump($meet->id_meet);die;
             // var_dump($request->date);
             // foreach($request->date as $date){
             //     var_dump($meet->id);
@@ -67,7 +72,7 @@ class MeetController extends Controller
 
 
             // $token = $meet->createToken('auth_token')->plainTextToken;
-            $data = Meet::where('id_meet','='. $meet->id)->get();
+            $data1 = Meet::where('id_meet','='. $meet->id)->get();
             // $id = Meet::findOrFail()
             // $data1 = Meet::findorFail();
             //var_dump($data->id_meet); die;
@@ -76,15 +81,22 @@ class MeetController extends Controller
             // }
             // die;
             foreach($request->date as $date){
-                $datemeet = DateMeet::insert([
-                    'id_meet' => $meet->id,
+                $datemeet = DateMeet::create([
+                    'id_meet' => $meet->id_meet,
                     'datetime' => $date,
                 ]);
             }
 
             $data2 = DateMeet::where('id','='. $datemeet->id)->get();
+            $data = DB::table('meet')
+                                ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+                                ->select('meet.*','meet_date_time.datetime')
+                                ->where('meet.id_meet', $meet->id_meet)
+                                // ->where('meet_date_time.id_meet','='. $meet->id_meet)
+                                -> get();
 
-            if($data && $data2){
+                                // var_dump($data); die;
+            if($data){
                 return ApiFormatter::createApi($data, null, 'Succesfull');
             }
             else{
@@ -103,7 +115,14 @@ class MeetController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = DB::table('meet')
+                                ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+                                ->select('meet.*','meet_date_time.datetime')
+                                ->where('meet.id_meet', $id)
+                                // ->where('meet_date_time.id_meet','='. $meet->id_meet)
+                                -> get();
+
+        return ApiFormatter::createApi($data, null, 'Succesfull');
     }
 
     /**

@@ -48,7 +48,7 @@ class UserController extends Controller
 
             $token = $users->createToken('auth_token')->plainTextToken;
             $data = User::where('nip','='. $users->nip)->get();
-            var_dump($data); die;
+            // var_dump($data); die;
             if($data){
                 return ApiFormatter::createApi($data, $token, 'Succesfull');
             }

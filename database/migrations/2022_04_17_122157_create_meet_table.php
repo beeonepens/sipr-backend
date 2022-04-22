@@ -24,8 +24,8 @@ class CreateMeetTable extends Migration
         });
 
         Schema::table('meet', function (Blueprint $table) {
-            $table->unsignedInteger('room_id')->nullable();
-            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('room_id');
+            $table->string('user_id');
 
             $table->foreign('room_id')
                     ->references('id_room')
@@ -50,5 +50,15 @@ class CreateMeetTable extends Migration
     public function down()
     {
         Schema::dropIfExists('meet');
+        // Schema::table('meet', function(Blueprint $table)
+        // {
+        //     $table->dropForeign('meet_user_id_foreign');
+        //     $table->dropIndex('meet_user_id_index');
+        //     $table->dropColumn('user_id');
+        //     $table->dropForeign('meet_room_id_foreign');
+        //     $table->dropIndex('meet_room_id_index');
+        //     $table->dropColumn('room_id');
+        // });
+
     }
 }

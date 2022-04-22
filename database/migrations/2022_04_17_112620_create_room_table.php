@@ -24,7 +24,7 @@ class CreateRoomTable extends Migration
         });
 
         Schema::table('room', function (Blueprint $table) {
-            $table->unsignedInteger('user_id')->nullable();
+            $table->string('user_id')->nullable();
             $table->foreign('user_id')
                     ->references('nip')
                     ->on('users')

@@ -21,8 +21,9 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 Route::get('user',[UserController::class, 'index']);
+Route::get('meet/show/{id}',[MeetController::class, 'show']);
 Route::post('user/store',[UserController::class, 'store']);
-Route::post('meet/store/{id}',[MeetController::class, 'store']);
+Route::post('meet/store',[MeetController::class, 'store']);
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 

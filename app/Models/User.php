@@ -19,6 +19,8 @@ class User extends Authenticatable
      */
 
     protected $primaryKey = 'nip';
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $fillable = [
         'nip',

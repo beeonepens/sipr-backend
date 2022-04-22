@@ -14,7 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->unsignedInteger('nip');
+            $table->string('nip');
             $table->string('name');
             $table->enum('role',['admin','user']);
             $table->boolean('isActive')->default(true);

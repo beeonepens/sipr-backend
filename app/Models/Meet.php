@@ -13,12 +13,14 @@ class Meet extends Model
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'meet';
-
+    protected $primaryKey = 'id_meet';
     protected $fillable = [
         'name_meeting',
         'description',
         'limit',
         'isOnline',
+        'room_id',
+        'user_id'
     ];
 
     /**

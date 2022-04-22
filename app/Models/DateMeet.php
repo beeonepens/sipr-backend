@@ -13,6 +13,7 @@ class DateMeet extends Model
     use HasApiTokens, HasFactory, Notifiable;
     // public $timestamps = true;
     protected $table = 'meet_date_time';
+    public $timestamps = false;
     protected $fillable = [
         'id_meet',
         'datetime',
