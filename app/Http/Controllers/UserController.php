@@ -27,6 +27,7 @@ class UserController extends Controller
     {
         try {
             $request->validate([
+                'nip' => 'required|max:255',
                 'name' => 'required|max:255',
                 // 'role' => 'required',
                 'email' => 'required|email:dns|unique:users',
@@ -34,17 +35,20 @@ class UserController extends Controller
             ]);
 
             $users = User::create([
+                'nip' => $request->nip,
                 'name' => $request->name,
                 'role' => 'user',
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'avatarUrl' => $request->avatarUrl,
                 'address' => $request->address,
+                'gender' => $request->gender,
+                'dateofbirth' => $request->dateofbirth,
             ]);
 
             $token = $users->createToken('auth_token')->plainTextToken;
-            $data = User::where('id','='. $users->id)->get();
-
+            $data = User::where('nip','='. $users->nip)->get();
+            // var_dump($data); die;
             if($data){
                 return ApiFormatter::createApi($data, $token, 'Succesfull');
             }

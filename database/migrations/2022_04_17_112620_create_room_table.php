@@ -14,8 +14,8 @@ class CreateRoomTable extends Migration
     public function up()
     {
         Schema::create('room', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
+            $table->increments('id_room');
+            $table->string('name_room');
             $table->text('description');
             $table->boolean('isOnline');
             $table->boolean('isBooked')->default(false);
@@ -24,9 +24,9 @@ class CreateRoomTable extends Migration
         });
 
         Schema::table('room', function (Blueprint $table) {
-            $table->unsignedInteger('user_id')->nullable();
+            $table->string('user_id')->nullable();
             $table->foreign('user_id')
-                    ->references('id')
+                    ->references('nip')
                     ->on('users')
                     ->onUpdate('cascade')
                     ->onDelete('cascade');;

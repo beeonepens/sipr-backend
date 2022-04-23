@@ -16,6 +16,7 @@ class UserAdmin extends Seeder
     public function run()
     {
         User::create([
+            'nip' => '1',
             'name' => 'Admin',
             'role' => 'admin',
             'email' => 'admin@gmail.com',
