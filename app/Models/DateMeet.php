@@ -24,7 +24,7 @@ class DateMeet extends Model
      *
      * @var array<int, string>
      */
-    protected $hidden = [
-        'id_meet',
-    ];
+    // protected $hidden = [
+    //     'id_meet',
+    // ];
 }

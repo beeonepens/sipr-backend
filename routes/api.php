@@ -21,12 +21,19 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 Route::get('user',[UserController::class, 'index']);
-Route::get('meet/show/{id}',[MeetController::class, 'show']);
 Route::post('user/store',[UserController::class, 'store']);
-Route::post('meet/store',[MeetController::class, 'store']);
+
+
 
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
+});
+
+Route::group(['prefix' => 'meet', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('show/{id}',[MeetController::class, 'show']);
+    Route::post('store',[MeetController::class, 'store']);
+    Route::put('update/{id}',[MeetController::class, 'update']);
+    Route::delete('delete/{id}',[MeetController::class, 'destroy']);
 });

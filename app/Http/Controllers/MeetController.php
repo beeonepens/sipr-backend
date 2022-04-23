@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Meet;
 use App\Models\DateMeet;
 use App\Models\MeetDate;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use DateTime;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
@@ -87,7 +89,7 @@ class MeetController extends Controller
                 ]);
             }
 
-            $data2 = DateMeet::where('id','='. $datemeet->id)->get();
+            // $data2 = DateMeet::where('id','='. $datemeet->id)->get();
             $data = DB::table('meet')
                                 ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
                                 ->select('meet.*','meet_date_time.datetime')
@@ -115,14 +117,25 @@ class MeetController extends Controller
      */
     public function show($id)
     {
-        $data = DB::table('meet')
-                                ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+        $data = Meet::where('id_meet', $id)->get();
+        $datatime = DB::table('meet')
+                                ->rightJoin('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
                                 ->select('meet.*','meet_date_time.datetime')
                                 ->where('meet.id_meet', $id)
                                 // ->where('meet_date_time.id_meet','='. $meet->id_meet)
                                 -> get();
 
-        return ApiFormatter::createApi($data, null, 'Succesfull');
+        foreach($datatime as $datatimes) {
+            $datetime[] = $datatimes->datetime;
+        }
+        $data->put('datetime',$datetime);
+        $jsonValue = $data->toJson();
+        if($data){
+            return response()->json($data);
+        }
+        else{
+            return ApiFormatter::createApi($data, 'Data Not Found');
+        }
     }
 
     /**
@@ -134,7 +147,71 @@ class MeetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'description' => 'required|max:255',
+            'isOnline' => 'required',
+            'date' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // $meet = DB::table('meet')
+        //             ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+        //             ->where('meet.id_meet', $id)
+        //             -> update([
+        //                 'meet.name_meeting' => $request->name,
+        //                 'meet.description' => $request->description,
+        //                 'meet.isOnline' => $request->isOnline,
+        //                 'meet.limit' => $request->limit,
+        //                 'meet.room_id' => $request->room_id,
+        //                 'meet.user_id' => $request->user_id,
+        //                 'meet_date_time.datetime' => $request->date,
+        //             ]);
+        // var_dump( Carbon::now()); die;
+        $meet = Meet::where('id_meet', $id)
+                    -> update([
+                        'name_meeting' => $request->name,
+                        'description' => $request->description,
+                        'isOnline' => $request->isOnline,
+                        'limit' => $request->limit,
+                        // 'updated_at' => Carbon::now(),
+                        'room_id' => $request->room_id,
+                        'user_id' => $request->user_id,
+                    ]);
+
+        // $meet = DateMeet::where('id_meet', $id)
+        //             -> update([
+        //                 'datetime' => $request->date,
+        //             ]);
+
+        $id_date = DateMeet::get();
+        $datetime = $request->input('date');
+        $i =0;
+        foreach ($id_date as $date) {
+            DateMeet::where('id_meet', $id)
+            ->where('id',$date->id)
+            -> update([
+                'datetime' => $datetime[$i],
+            ]);
+            $i++;
+        }
+
+        $data = DB::table('meet')
+                                ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
+                                ->select('meet.*','meet_date_time.datetime')
+                                ->where('meet.id_meet', $id)
+                                // ->where('meet_date_time.id_meet','='. $meet->id_meet)
+                                -> get();
+
+        if($data){
+            return ApiFormatter::createApi($data, null, 'Succesfull');
+        }
+        else{
+            return ApiFormatter::createApi($data, null, 'failed');
+        }
     }
 
     /**
@@ -145,6 +222,6 @@ class MeetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deleted = Meet::where('id_meet', $id)->delete();
     }
 }

@@ -15,9 +15,18 @@ class CreateMeetDateTimeTable extends Migration
     {
         Schema::create('meet_date_time', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_meet');
+
             $table->string('datetime');
+
             //$table->primary('datetime');
+        });
+        Schema::table('meet_date_time', function (Blueprint $table) {
+            $table->unsignedInteger('id_meet');
+            $table->foreign('id_meet')
+                    ->references('id_meet')
+                    ->on('meet')
+                    ->onUpdate('cascade')
+                    ->onDelete('cascade');;
         });
     }
 

@@ -2,28 +2,44 @@
     namespace App\Helpers;
 
     class ApiFormatter{
-        protected static $response = [
+        protected static $responseApi = [
+            'data' => null,
+            'message' => null,
+        ];
+
+        protected static $responseApiAuth = [
             'data' => null,
             'datetime' => null,
             'token' => null,
             'message' => null,
         ];
 
-        public static function createApi($data =null, $token =null, $message =null){
-            self::$response['data'] = $data;
-            self::$response['token'] = $token;
-            self::$response['message'] = $message;
+        protected static $responseApiMeet = [
+            'data' => null,
+            'message' => null,
+        ];
 
-            return response()->json(self::$response);
+        public static function createApi($data =null, $message =null){
+            self::$responseApi['data'] = $data;
+            self::$responseApi['message'] = $message;
+
+            return response()->json(self::$responseApi);
         }
 
-        public static function createApiMeet($data =null, $data2 =null, $token =null, $message =null){
-            self::$response['data'] = $data;
-            self::$response['datetime'] = $data2;
-            self::$response['token'] = $token;
-            self::$response['message'] = $message;
+        public static function createApiAuth($data =null, $token =null, $message =null){
+            self::$responseApiAuth['data'] = $data;
+            self::$responseApiAuth['token'] = $token;
+            self::$responseApiAuth['message'] = $message;
 
-            return response()->json(self::$response);
+            return response()->json(self::$responseApiAuth);
+        }
+
+        public static function createApiMeet($data =null, $datetime =null, $message =null){
+            self::$responseApiMeet['data'] = $data;
+            self::$responseApiMeet['data']['datetime'] = $datetime;
+            self::$responseApiMeet['message'] = $message;
+
+            return response()->json(self::$responseApiMeet);
         }
 
     }
