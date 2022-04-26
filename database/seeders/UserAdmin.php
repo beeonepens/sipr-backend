@@ -18,7 +18,7 @@ class UserAdmin extends Seeder
         User::create([
             'nip' => '1',
             'name' => 'Admin',
-            'role' => 'admin',
+            'role_id' => 1,
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin4321'),
             'isActive' => true,

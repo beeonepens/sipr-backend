@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -15,10 +16,9 @@ class UserController extends Controller
     {
         $data = User::all();
 
-        if($data){
+        if ($data) {
             return ApiFormatter::createApi($data);
-        }
-        else{
+        } else {
             return ApiFormatter::createApi('Failed');
         }
     }
@@ -37,7 +37,7 @@ class UserController extends Controller
             $users = User::create([
                 'nip' => $request->nip,
                 'name' => $request->name,
-                'role' => 'user',
+                'role_id' => $request->role_id,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'avatarUrl' => $request->avatarUrl,
@@ -47,16 +47,33 @@ class UserController extends Controller
             ]);
 
             $token = $users->createToken('auth_token')->plainTextToken;
-            $data = User::where('nip','='. $users->nip)->get();
+            $data = User::where('nip', '=' . $users->nip)->get();
+            $data = DB::table('users')
+                ->join('roles', 'users.role_id', '=', 'roles.id')
+                ->select(
+                    'users.nip',
+                    'users.name',
+                    'users.email',
+                    'users.password',
+                    'users.avatarUrl',
+                    'users.address',
+                    'users.gender',
+                    'users.dateofbirth',
+                    'users.created_at',
+                    'users.updated_at',
+                    'roles.name_role'
+                )
+                ->where('nip', '=', $users->nip)
+                // ->where('meet_date_time.id_meet','='. $meet->id_meet)
+                ->get();
             // var_dump($data); die;
-            if($data){
-                return ApiFormatter::createApi($data, $token, 'Succesfull');
-            }
-            else{
-                return ApiFormatter::createApi($data, $token, 'failed');
+            if ($data) {
+                return ApiFormatter::createApiAuth($data, $token, 'Succesfull');
+            } else {
+                return ApiFormatter::createApiAuth('Data not found', 'Token Cannot Created', 'Failed');
             }
         } catch (Exception $error) {
-            echo $error->getMessage();
+            return ApiFormatter::createApi('Data Cannot Create', $error);
         }
     }
 
