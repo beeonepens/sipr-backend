@@ -9,6 +9,8 @@ use App\Helpers\ApiFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -47,7 +49,7 @@ class UserController extends Controller
             ]);
 
             $token = $users->createToken('auth_token')->plainTextToken;
-            $data = User::where('nip', '=' . $users->nip)->get();
+            // $data = User::where('nip', '=' . $users->nip)->get();
             $data = DB::table('users')
                 ->join('roles', 'users.role_id', '=', 'roles.id')
                 ->select(
@@ -85,7 +87,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -97,7 +98,37 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required',
+                'role_id' => 'required',
+                'password' => 'required|min:5|max:255',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            $user = User::find($id);
+
+            $user->name = $request->name;
+            $user->role_id = $request->role_id;
+            $user->password = $request->password;
+            $user->avatarUrl = $request->avatarUrl;
+            $user->address = $request->address;
+            $user->gender = $request->gender;
+            $user->dateofbirth = $request->dateofbirth;
+
+            $user->save();
+            $data = User::where('nip', '=', $id)->get();
+            if ($data) {
+                return ApiFormatter::createApi($data, 'Succesfull Upadte');
+            } else {
+                return ApiFormatter::createApi('Data cannot updated', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi('Data Cannot Update', $error);
+        }
     }
 
     /**
