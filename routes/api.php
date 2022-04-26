@@ -20,8 +20,8 @@ use App\Http\Controllers\UserController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::get('user',[UserController::class, 'index']);
-Route::post('user/store',[UserController::class, 'store']);
+Route::get('user', [UserController::class, 'index']);
+Route::post('user/store', [UserController::class, 'store']);
 
 
 
@@ -31,9 +31,13 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
 });
 
+Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('update/{id}', [UserController::class, 'update']);
+});
+
 Route::group(['prefix' => 'meet', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('show/{id}',[MeetController::class, 'show']);
-    Route::post('store',[MeetController::class, 'store']);
-    Route::put('update/{id}',[MeetController::class, 'update']);
-    Route::delete('delete/{id}',[MeetController::class, 'destroy']);
+    Route::get('show/{id}', [MeetController::class, 'show']);
+    Route::post('store', [MeetController::class, 'store']);
+    Route::put('update/{id}', [MeetController::class, 'update']);
+    Route::delete('delete/{id}', [MeetController::class, 'destroy']);
 });

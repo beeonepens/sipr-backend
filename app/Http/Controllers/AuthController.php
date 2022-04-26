@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required',
@@ -39,7 +40,7 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
-            if (! Hash::check($request->password, $user->password, [])) {
+            if (!Hash::check($request->password, $user->password, [])) {
                 throw new \Exception('Error in Login');
             }
 
@@ -52,13 +53,15 @@ class AuthController extends Controller
                     'status_code' => 200,
                     'access_token' => $tokenResult,
                     'token_type' => 'Bearer',
+                    'user_id' => $user->nip,
                 ]
             ];
             return response()->json($respon, 200);
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $user = $request->user();
         $user->currentAccessToken()->delete();
         $respon = [
@@ -69,5 +72,4 @@ class AuthController extends Controller
         ];
         return response()->json($respon, 200);
     }
-
 }
