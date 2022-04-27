@@ -19,9 +19,9 @@ class UserController extends Controller
         $data = User::all();
 
         if ($data) {
-            return ApiFormatter::createApi($data);
+            return ApiFormatter::createApi($data, 'Success');
         } else {
-            return ApiFormatter::createApi('Failed');
+            return ApiFormatter::createApi('Data Is Empty', 'Failed');
         }
     }
 

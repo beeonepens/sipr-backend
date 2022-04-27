@@ -12,11 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoomController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $data = Room::all();
@@ -28,12 +24,7 @@ class RoomController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -68,12 +59,7 @@ class RoomController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Roomm  $roomm
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Request $request)
     {
         if ($request->query('id')) {
@@ -91,26 +77,53 @@ class RoomController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Roomm  $roomm
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Room $roomm)
+
+    public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name_room' => 'required',
+            'description' => 'required|max:255',
+            'isOnline' => 'required',
+            'isBooked' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            $room = Room::find($id);
+
+            $room->name_room = $request->name_room;
+            $room->description = $request->description;
+            $room->isOnline = $request->isOnline;
+            $room->isBooked = $request->isBooked;
+            $room->user_id = $request->user_id;
+            $room->save();
+
+            $data = Room::where('id_room', '=', $room->id_room)->get();
+            if ($data) {
+                return ApiFormatter::createApi($data, 'Succes');
+            } else {
+                return ApiFormatter::createApi('Data Update Room', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi('Data Cannot Create', $error);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Roomm  $roomm
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Room $roomm)
+
+    public function destroy($id)
     {
-        //
+        try {
+            if (Room::where('id_room', $id)->delete()) {
+                return ApiFormatter::createApi(null, 'Succesfull');
+            } else {
+                return ApiFormatter::createApi('Failed Delete Data', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi('Cannot Delete', $error);
+        }
     }
 }
