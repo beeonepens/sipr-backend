@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MeetController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -25,6 +26,8 @@ Route::post('user/store', [UserController::class, 'store']);
 
 
 
+
+
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
@@ -32,12 +35,19 @@ Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
-    Route::post('update/{id}', [UserController::class, 'update']);
+    Route::put('update/{id}', [UserController::class, 'update']);
 });
 
 Route::group(['prefix' => 'meet', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('show/{id}', [MeetController::class, 'show']);
+    Route::get('show', [MeetController::class, 'show']);
     Route::post('store', [MeetController::class, 'store']);
     Route::put('update/{id}', [MeetController::class, 'update']);
     Route::delete('delete/{id}', [MeetController::class, 'destroy']);
+});
+
+
+Route::group(['prefix' => 'room', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [RoomController::class, 'index']);
+    Route::get('show', [RoomController::class, 'show']);
+    Route::post('store', [RoomController::class, 'store']);
 });

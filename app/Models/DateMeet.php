@@ -15,8 +15,9 @@ class DateMeet extends Model
     protected $table = 'meet_date_time';
     public $timestamps = false;
     protected $fillable = [
+        'start_datetime',
+        'end_datetime',
         'id_meet',
-        'datetime',
     ];
 
     /**

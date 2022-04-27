@@ -29,6 +29,7 @@ class ApiFormatter
         return response()->json(self::$responseApi);
     }
 
+
     public static function createApiAuth($data = null, $token = null, $message = null)
     {
         self::$responseApiAuth['data'] = $data;
