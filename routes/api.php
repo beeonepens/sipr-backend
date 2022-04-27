@@ -50,4 +50,6 @@ Route::group(['prefix' => 'room', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', [RoomController::class, 'index']);
     Route::get('show', [RoomController::class, 'show']);
     Route::post('store', [RoomController::class, 'store']);
+    Route::put('update/{id}', [MeetController::class, 'update']);
+    Route::delete('delete/{id}', [MeetController::class, 'destroy']);
 });
