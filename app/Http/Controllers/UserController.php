@@ -113,7 +113,7 @@ class UserController extends Controller
 
             $user->name = $request->name;
             $user->role_id = $request->role_id;
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
             $user->avatarUrl = $request->avatarUrl;
             $user->address = $request->address;
             $user->gender = $request->gender;

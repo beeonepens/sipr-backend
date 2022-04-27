@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Str;
+use App\Models\Room;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RoomSeeder extends Seeder
 {
@@ -15,14 +14,18 @@ class RoomSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('room')->insert([
-            'name_room' => 'F01A',
-            'description' => Str::random(50),
-            'isOnline' => 0,
-            'isBooked' => 0,
-            'user_id' => 1,
-
-
-        ]);
+        $ruangan_json = file_get_contents('database\data\ruang.json');
+        $ruangan = json_decode($ruangan_json, false);
+        foreach ($ruangan as $value) {
+            Room::create(
+                [
+                    'name_room' => $value->RUANG,
+                    'description' => $value->KETERANGAN,
+                    'isOnline' => 0,
+                    'isBooked' => 0,
+                    'user_id' => 1,
+                ],
+            );
+        }
     }
 }
