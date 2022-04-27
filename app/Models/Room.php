@@ -19,7 +19,4 @@ class Room extends Model
         'isBooked',
         'user_id'
     ];
-    protected $hidden = [
-        'limit',
-    ];
 }
