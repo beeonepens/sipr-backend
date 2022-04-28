@@ -18,11 +18,13 @@ class MeetController extends Controller
 
     public function index()
     {
-        // $data = DB::table('meet')
-        //             ->join('meet_date_time', 'meet.id_meet', '=' ,'meet_date_time.id_meet')
-        //             ->select('meet.*','meet_date_time.datetime')
-        //             -> get();;
-        // return ApiFormatter::createApi($data, null, 'Succesfull');
+        $data = Meet::all();
+
+        if ($data) {
+            return ApiFormatter::createApi($data, 'Succes');
+        } else {
+            return ApiFormatter::createApi('Data is empty', 'Failed');
+        }
     }
 
     /**
@@ -145,6 +147,7 @@ class MeetController extends Controller
         }
 
         try {
+            $old_meet = Meet::find($id);
             $meet = Meet::find($id);
             $meet->name_meeting = $request->name;
             $meet->description = $request->description;
@@ -154,7 +157,22 @@ class MeetController extends Controller
             $meet->user_id = $request->user_id;
             $meet->save();
 
-            $data = Meet::where('id_meet', '=', $meet->id_meet)->get();
+            $data = Meet::find($id)->get();
+            // var_dump($old_meet);
+            // var_dump('------------------------------------------');
+            // var_dump($meet);
+            // die;
+
+            if ($meet->room_id != $old_meet->room_id) {
+                $room_old = Room::where('room_id', '=', $old_meet->room_id);
+                $room_old->isBooked = 0;
+                $room_old->save();
+
+                $room_new = Room::where('room_id', '=', $meet->room_id);
+                $room_new->isBooked = 1;
+                $room_new->save();
+            }
+
             for ($i = 0; $i < $request->limit; $i++) {
                 DateMeet::where('id_meet', $id)
                     ->update([

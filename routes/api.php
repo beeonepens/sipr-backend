@@ -39,6 +39,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
 });
 
 Route::group(['prefix' => 'meet', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [MeetController::class, 'index']);
     Route::get('show', [MeetController::class, 'show']);
     Route::post('store', [MeetController::class, 'store']);
     Route::put('update/{id}', [MeetController::class, 'update']);
