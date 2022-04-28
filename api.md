@@ -20,33 +20,46 @@
 -   body:
     ```
     {
-      nip: 123123
-      email: xxx@email.com,
-      password: xxxx,
-      name: xxxxx
-      address?: asdjlasd
-      dst
+      "nip": 123123
+      "name": "asdasd asdasd"
+      "role_id": 1 or 2,
+      "email": "xxx@email.com",
+      "password": "xxxx",
+      "avatarUrl?": "asdasd/asdasd/asdasd.asd",
+      "address?": "asdjlasd",
+      "gender?" : "pria" or "wanita,
+      "dateofbirth?": "yyyy-mm-dd"
     }
     ```
 -   headers: -
 
 ### Update User
 
--   url: http://localhost:8000/api/user/store
+-   url: http://localhost:8000/api/user/update/{nip}
 -   method: POST
 -   body:
     ```
     {
-      nip: 123123
-      email: xxx@email.com,
-      password: xxxx,
-      name: xxxxx
-      address?: asdjlasd
-      dst
+      "nip": 123123
+      "name": "asdasd asdasd"
+      "role_id": 1 or 2,
+      "email": "xxx@email.com",
+      "password": "xxxx",
+      "avatarUrl?": "asdasd/asdasd/asdasd.asd",
+      "address?": "asdjlasd",
+      "gender?" : "pria" or "wanita,
+      "dateofbirth?": "yyyy-mm-dd"
     }
     ```
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
+
+### Get All User
+
+-   url: http://localhost:8000/api/user
+-   method: Get
+-   body:
+-   headers: -
 
 ---
 
@@ -59,14 +72,20 @@
 -   body:
     ```
     {
-      name: 123123
-      description: xxx@email.com,
-      isOnline: 1 or 0,
-      limit: 1 or 0
-      room_id: 123123
-      user_id: 123123
-      date_start[i]: yyyy-mm-dd:hh:ss
-      date_end[i]: yyyy-mm-dd:hh:ss
+        "name": "asdasdad asdasd",
+        "description": asdasd asdasdas",
+        "isOnline": 1 or 2,
+        "limit": 123,
+        "room_id": 123123,
+        "user_id": 123123,
+        "date_start": [
+            "yyyy-mm-dd:hh:ss",
+            "yyyy-mm-dd:hh:ss"
+        ],
+        "date_end": [
+            "yyyy-mm-dd:hh:ss",
+            "yyyy-mm-dd:hh:ss"
+        ]
     }
     ```
 -   headers:
@@ -95,14 +114,20 @@
 -   body:
     ```
     {
-      name: 123123
-      description : xxx@email.com,
-      isOnline: 1 or 0,
-      limit: 1 or 0
-      room_id: 123123
-      user_id: 123123
-      date_start[i]: yyyy-mm-dd:hh:ss
-      date_end[i]: yyyy-mm-dd:hh:ss
+       "name": "asdasdad asdasd",
+        "description": "asdasd asdasdas",
+        "isOnline": 1 or 2,
+        "limit": 123,
+        "room_id": 123123,
+        "user_id": 123123,
+        "date_start": [
+            "yyyy-mm-dd:hh:ss",
+            "yyyy-mm-dd:hh:ss"
+        ],
+        "date_end": [
+            "yyyy-mm-dd:hh:ss",
+            "yyyy-mm-dd:hh:ss"
+        ]
     }
     ```
 -   headers:
@@ -127,17 +152,17 @@
 -   body:
     ```
     {
-      name_room: xxxxxxx
-      description: xxx@email.com,
-      isOnline: 1 or 0,
-      isBooked: 1 or 0
-      user_id: 123123
+        "name_room": "asdasdad asdasd",
+        "description": "asdasd asdasdas",
+        "isOnline": 0 or 1,
+        "isBOoked": 0 or 1,
+        "user_id": 123123,
     }
     ```
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
-### Get All Meeting
+### Get All Room
 
 -   url: http://localhost:8000/api/room
 -   method: Get
@@ -145,7 +170,7 @@
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
-### Get Detail Meeting
+### Get Detail Room
 
 -   url: http://localhost:8000/api/room/show?id=13 atau http://localhost:8000/api/room/show?id_user=1
 -   method: Get
@@ -153,18 +178,18 @@
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
-### Update Meeting
+### Update Room
 
 -   url: http://localhost:8000/api/meet/update
 -   method: PUT
 -   body:
     ```
     {
-      name_room: xxxxxxx
-      description: xxx@email.com,
-      isOnline: 1 or 0,
-      isBooked: 1 or 0
-      user_id: 123123
+        "name_room": "asdasdad asdasd",
+        "description": "asdasd asdasdas",
+        "isOnline": 0 or 1,
+        "isBOoked": 0 or 1,
+        "user_id": 123123,
     }
     ```
 -   headers:
