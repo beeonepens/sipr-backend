@@ -36,7 +36,7 @@
 ### Update User
 
 -   url: http://localhost:8000/api/user/update/{nip}
--   method: POST
+-   method: PUT
 -   body:
     ```
     {
