@@ -19,9 +19,13 @@ class MeetController extends Controller
     public function index()
     {
         $data = Meet::all();
+        $date = DB::table('meet')
+            ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+            ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+            ->get();
 
         if ($data) {
-            return ApiFormatter::createApi($data, 'Succes');
+            return ApiFormatter::createApi([$data, $date], 'Succes');
         } else {
             return ApiFormatter::createApi('Data is empty', 'Failed');
         }
@@ -98,23 +102,22 @@ class MeetController extends Controller
 
     public function show(Request $request)
     {
-        if (Meet::where('id_meet', $request->query('id'))) {
+        if (Meet::where('id_meet', $request->query('id'))->exists()) {
             $data = Meet::where('id_meet', $request->query('id'))->get();
             $datatime = DB::table('meet')
                 ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
-                ->select('meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('meet.id_meet', $request->query('id'))
                 ->get();
-        } else if (Meet::where('user_id', $request->query('user_id'))) {
+        } else if (Meet::where('user_id', $request->query('user_id'))->exists()) {
             $data = Meet::where('user_id', $request->query('user_id'))->get();
             $datatime = DB::table('meet')
                 ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
-                ->select('meet_date_time.start_datetime', 'meet_date_time.end_datetime')
-                ->where('meet.user_id', $request->query('id'))
+                ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                ->where('meet.user_id', $request->query('user_id'))
                 ->get();
-        } else {
-            $data = null;
-            $datatime = null;
+        } else if (!$request->query('user_id') && !$request->query('id')) {
+            return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
 
         if (isset($data) && isset($datatime)) {
