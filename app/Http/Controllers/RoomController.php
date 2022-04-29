@@ -62,12 +62,13 @@ class RoomController extends Controller
 
     public function show(Request $request)
     {
-        if ($request->query('id')) {
+
+        if (Room::where('id_room', $request->query('id'))->exists()) {
             $data = Room::where('id_room', $request->query('id'))->get();
-        } else if ($request->query('user_id')) {
+        } else if (Room::where('user_id', $request->query('user_id'))->exists()) {
             $data = Room::where('user_id', $request->query('user_id'))->get();
-        } else {
-            $data = null;
+        } else if ((!$request->query('user_id') && !$request->query('id'))) {
+            return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
 
         if (isset($data)) {
