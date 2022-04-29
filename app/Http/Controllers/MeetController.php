@@ -167,11 +167,11 @@ class MeetController extends Controller
             // die;
 
             if ($meet->room_id != $old_meet->room_id) {
-                $room_old = Room::where('room_id', '=', $old_meet->room_id);
+                $room_old = Room::find($old_meet->room_id);
                 $room_old->isBooked = 0;
                 $room_old->save();
 
-                $room_new = Room::where('room_id', '=', $meet->room_id);
+                $room_new = Room::find($meet->room_id);
                 $room_new->isBooked = 1;
                 $room_new->save();
             }
