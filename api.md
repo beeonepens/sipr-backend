@@ -61,6 +61,14 @@
 -   body:
 -   headers: -
 
+### Get Detail User
+
+-   url: http://localhost:8000/api/meet/show?nip=13 atau http://localhost:8000/api/meet/show?is_active=1 or 0
+-   method: Get
+-   body:
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
 ---
 
 ## Meeting

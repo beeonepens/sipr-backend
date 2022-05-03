@@ -85,8 +85,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
+        if (User::where('nip', $request->query('nip'))->exists()) {
+            $data = User::where('nip', '=', $request->query('nip'))->get();
+        } else if (User::where('isActive', $request->query('is_active'))->exists()) {
+            $data = User::where('isActive', $request->query('is_active'))->get();
+        } else if (!$request->query('user_id') && !$request->query('id')) {
+            return ApiFormatter::createApi('Query Not Found', 'Failed');
+        }
+
+        if (isset($data)) {
+            return ApiFormatter::createApi($data, 'Succesfull');
+        } else {
+            return ApiFormatter::createApi('Data Not Found', 'Failed');
+        }
     }
 
     /**
