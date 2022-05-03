@@ -134,20 +134,20 @@ class MeetController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:255',
-            'description' => 'required|max:255',
-            'isOnline' => 'required',
-            'limit' => 'required',
-            'room_id' => 'required',
-            'user_id' => 'required',
-            'date_start' => 'required',
-            'date_end' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name' => 'required|max:255',
+        //     'description' => 'required|max:255',
+        //     'isOnline' => 'required',
+        //     'limit' => 'required',
+        //     'room_id' => 'required',
+        //     'user_id' => 'required',
+        //     'date_start' => 'required',
+        //     'date_end' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
         try {
             $old_meet = Meet::find($id);
