@@ -112,15 +112,14 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'role_id' => 'required',
-                'password' => 'required|min:5|max:255',
-            ]);
+            // $validator = Validator::make($request->all(), [
+            //     'name' => 'required',
+            //     'role_id' => 'required',
+            // ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-            }
+            // if ($validator->fails()) {
+            //     return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+            // }
 
             $user = User::find($id);
 

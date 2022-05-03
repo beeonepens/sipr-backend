@@ -81,17 +81,17 @@ class RoomController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name_room' => 'required',
-            'description' => 'required|max:255',
-            'isOnline' => 'required',
-            'isBooked' => 'required',
-            'user_id' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'name_room' => 'required',
+        //     'description' => 'required|max:255',
+        //     'isOnline' => 'required',
+        //     'isBooked' => 'required',
+        //     'user_id' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
         try {
             $room = Room::find($id);
