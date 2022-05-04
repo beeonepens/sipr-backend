@@ -43,8 +43,7 @@
       "nip": 123123
       "name": "asdasd asdasd"
       "role_id": 1 or 2,
-      "email": "xxx@email.com",
-      "password": "xxxx",
+      "password?": "xxxx",
       "avatarUrl?": "asdasd/asdasd/asdasd.asd",
       "address?": "asdjlasd",
       "gender?" : "pria" or "wanita,
