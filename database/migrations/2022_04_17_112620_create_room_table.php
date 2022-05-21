@@ -20,16 +20,15 @@ class CreateRoomTable extends Migration
             $table->boolean('isOnline');
             $table->boolean('isBooked')->default(false);
             $table->timestamps();
-
         });
 
         Schema::table('room', function (Blueprint $table) {
             $table->string('user_id')->nullable();
             $table->foreign('user_id')
-                    ->references('nip')
-                    ->on('users')
-                    ->onUpdate('cascade')
-                    ->onDelete('cascade');;
+                ->references('nip')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
