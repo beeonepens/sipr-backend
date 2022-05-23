@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MeetController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
@@ -54,4 +55,12 @@ Route::group(['prefix' => 'room', 'middleware' => 'auth:sanctum'], function () {
     Route::post('store', [RoomController::class, 'store']);
     Route::put('update/{id}', [RoomController::class, 'update']);
     Route::delete('delete/{id}', [RoomController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'invite', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [InvitationController::class, 'index']);
+    Route::get('show', [InvitationController::class, 'show']);
+    Route::post('store', [InvitationController::class, 'store']);
+    Route::put('update/{id}', [InvitationController::class, 'update']);
+    Route::delete('delete/{id}', [InvitationController::class, 'destroy']);
 });

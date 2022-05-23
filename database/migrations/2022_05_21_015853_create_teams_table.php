@@ -16,11 +16,13 @@ class CreateTeamsTable extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->increments('id_team');
             $table->string('name_teams');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->timestamps();
-            $table->string('user_id');
+            $table->string('team_invite_code');
+            $table->string('id_pembuat');
 
-            $table->foreign('user_id')
+
+            $table->foreign('id_pembuat')
                 ->references('nip')
                 ->on('users')
                 ->onUpdate('cascade')

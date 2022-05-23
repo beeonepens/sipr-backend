@@ -14,9 +14,9 @@ class CreateInvitationsTable extends Migration
     public function up()
     {
         Schema::create('invitations', function (Blueprint $table) {
-            $table->increments('id_inivitation');
-            $table->boolean('isAccepted')->default(false);
-            $table->string('reason');
+            $table->increments('id_invitation');
+            $table->boolean('isAccepted')->nullable();
+            $table->string('reason')->nullable();
             $table->string('expiredDateTime');
             $table->timestamps();
             $table->string('id_invitee');
