@@ -84,9 +84,23 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function show(Team $team)
+    public function show(Request $request)
     {
-        //
+        if (Team::where('id_team', $request->query('id'))->exists()) {
+            $data = Team::where('id_team', $request->query('id'))->get();
+        } else if (Team::where('id_pembuat', $request->query('idMaster'))->exists()) {
+            $data = Team::where('id_pembuat', $request->query('idMaster'))->get();
+        } else if (Team::where('name_teams', $request->query('nameTeam'))->exists()) {
+            $data = Team::where('name_teams', $request->query('nameTeam'))->get();
+        } else if ((!$request->query('idMaster') && !$request->query('id') && !$request->query('nameTeam'))) {
+            return ApiFormatter::createApi('Query Not Found', 'Failed');
+        }
+
+        if (isset($data)) {
+            return ApiFormatter::createApi($data, 'Succesfull');
+        } else {
+            return ApiFormatter::createApi('Data Not Found', 'Failed');
+        }
     }
 
     /**
@@ -107,9 +121,29 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Team $team)
+    public function update(Request $request, $id)
     {
-        //
+        $user = Team::find($id);
+
+        $user->name = $request->name;
+        $user->role_id = $request->role_id;
+
+        if (isset($request->password)) {
+            $user->password = $request->password;
+        }
+
+        $user->avatarUrl = $request->avatarUrl;
+        $user->address = $request->address;
+        $user->gender = $request->gender;
+        $user->dateofbirth = $request->dateofbirth;
+
+        $user->save();
+        $data = Team::where('nip', '=', $id)->get();
+        if ($data) {
+            return ApiFormatter::createApi($data, 'Succesfull Upadte');
+        } else {
+            return ApiFormatter::createApi('Data cannot updated', 'Failed');
+        }
     }
 
     /**
