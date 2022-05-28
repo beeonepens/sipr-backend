@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\MeetController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\InvitationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,12 @@ Route::group(['prefix' => 'invite', 'middleware' => 'auth:sanctum'], function ()
     Route::post('store', [InvitationController::class, 'store']);
     Route::put('update/{id}', [InvitationController::class, 'update']);
     Route::delete('delete/{id}', [InvitationController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'team', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [TeamController::class, 'index']);
+    Route::get('show', [TeamController::class, 'show']);
+    Route::post('store', [TeamController::class, 'store']);
+    Route::put('update/{id}', [TeamController::class, 'update']);
+    Route::delete('delete/{id}', [TeamController::class, 'destroy']);
 });

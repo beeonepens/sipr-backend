@@ -21,7 +21,6 @@ class CreateTeamsTable extends Migration
             $table->string('team_invite_code');
             $table->string('id_pembuat');
 
-
             $table->foreign('id_pembuat')
                 ->references('nip')
                 ->on('users')
