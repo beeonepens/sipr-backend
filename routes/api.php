@@ -64,3 +64,11 @@ Route::group(['prefix' => 'invite', 'middleware' => 'auth:sanctum'], function ()
     Route::put('update/{id}', [InvitationController::class, 'update']);
     Route::delete('delete/{id}', [InvitationController::class, 'destroy']);
 });
+
+Route::group(['prefix' => 'team', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [TeamController::class, 'index']);
+    Route::get('show', [TeamController::class, 'show']);
+    Route::post('store', [TeamController::class, 'store']);
+    Route::put('update/{id}', [TeamController::class, 'update']);
+    Route::delete('delete/{id}', [TeamController::class, 'destroy']);
+});
