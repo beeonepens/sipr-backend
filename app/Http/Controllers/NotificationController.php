@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Models\Team;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
-class TeamController extends Controller
+class NotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,21 +37,12 @@ class TeamController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    private function rand_sha1($length)
-    {
-        $max = ceil($length / 40);
-        $random = '';
-        for ($i = 0; $i < $max; $i++) {
-            $random .= sha1(microtime(true) . mt_rand(10000, 90000));
-        }
-        return substr($random, 0, $length);
-    }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name_teams' => 'required',
+            'title' => 'required',
+            'notificationType' => 'required',
+            'meet_id' => 'required',
             'user_id' => 'required',
         ]);
 
@@ -60,14 +51,17 @@ class TeamController extends Controller
         }
         try {
 
-            $team = Team::create([
-                'name_teams' => $request->name_teams,
+            $notif = Notification::create([
+                'title' => $request->title,
                 'description' => $request->description,
-                'team_invite_code' => $this->rand_sha1(10),
-                'id_pembuat' => $request->user_id,
+                'isRead' => false,
+                'notificationType' => $request->notificationType,
+                'publicationDate' => $request->publicationDate,
+                'meet_id' => $request->meet_id,
+                'user_id' => $request->user_id,
             ]);
 
-            $data = Team::where('id_team', '=', $team->id_team)->get();
+            $data = Notification::where('id', '=', $notif->id)->get();
             if ($data) {
                 return ApiFormatter::createApi($data, 'Succes');
             } else {
@@ -77,14 +71,13 @@ class TeamController extends Controller
             return ApiFormatter::createApi('Data Cannot Create', $error);
         }
     }
-
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function show(Team $team)
+    public function show(Notification $notification)
     {
         //
     }
@@ -92,10 +85,10 @@ class TeamController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function edit(Team $team)
+    public function edit(Notification $notification)
     {
         //
     }
@@ -104,21 +97,35 @@ class TeamController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Team $team)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $notif = Notification::find($id);
+
+            $notif->isRead = $request->isRead;
+            $notif->save();
+
+            $data = Notification::where('id', '=', $notif->id)->get();
+            if ($data) {
+                return ApiFormatter::createApi($data, 'Succes');
+            } else {
+                return ApiFormatter::createApi('Data Update Notification', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi('Data Cannot Create', $error);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Team  $team
+     * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team)
+    public function destroy(Notification $notification)
     {
         //
     }
