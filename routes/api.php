@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -72,4 +73,12 @@ Route::group(['prefix' => 'team', 'middleware' => 'auth:sanctum'], function () {
     Route::post('store', [TeamController::class, 'store']);
     Route::put('update/{id}', [TeamController::class, 'update']);
     Route::delete('delete/{id}', [TeamController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'notif', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('show', [NotificationController::class, 'show']);
+    Route::post('store', [NotificationController::class, 'store']);
+    Route::put('update/{id}', [NotificationController::class, 'update']);
+    Route::delete('delete/{id}', [NotificationController::class, 'destroy']);
 });

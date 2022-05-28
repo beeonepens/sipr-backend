@@ -16,10 +16,10 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->string('isRead')->default(false);
-            $table->enum('notificationType', ['notification', 'invitation']);
-            $table->date('publicationDate');
+            $table->enum('notification_type', ['notification', 'invitation']);
+            $table->string('publicationDate');
             $table->timestamps();
 
             $table->unsignedInteger('meet_id');
