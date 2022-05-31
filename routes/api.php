@@ -68,11 +68,14 @@ Route::group(['prefix' => 'invite', 'middleware' => 'auth:sanctum'], function ()
 });
 
 Route::group(['prefix' => 'team', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [TeamController::class, 'index']);
+    // Route::get('/', [TeamController::class, 'index']);
     Route::get('show', [TeamController::class, 'show']);
+    Route::get('member/{id}', [TeamController::class, 'showMember']);
     Route::post('store', [TeamController::class, 'store']);
     Route::put('update/{id}', [TeamController::class, 'update']);
     Route::delete('delete/{id}', [TeamController::class, 'destroy']);
+    Route::delete('delete/member/{id}/{id_member}', [TeamController::class, 'deleteMember']);
+    Route::post('join', [TeamController::class, 'join']);
 });
 
 Route::group(['prefix' => 'notif', 'middleware' => 'auth:sanctum'], function () {
