@@ -299,6 +299,72 @@
 
 ---
 
+## Invitation
+
+### Create Invite
+
+-   url: http://127.0.0.1:8000/api/invite/store
+-   method: POST
+-   body:
+    ```
+    {
+        "id_invitee": "3120500046",
+        "id_receiver": "3120500033",
+        "id_meet": "1"
+    }
+    ```
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
+### Get All Invite
+
+### Belum Jadi
+
+-   url: http://localhost:8000/api/room
+-   method: Get
+-   body:
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
+### Get Detail Invite
+
+-   url: http://127.0.0.1:8000/api/invite/show?id=1 atau ?idInvitee=3120500044
+-   method: Get
+-   body:
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
+### Update Room
+
+### Belum Jadi
+
+-   url: http://localhost:8000/api/meet/update
+-   method: PUT
+-   body:
+    ```
+    {
+        "name_room": "asdasdad asdasd",
+        "description": "asdasd asdasdas",
+        "isOnline": 0 or 1,
+        "isBOoked": 0 or 1,
+        "user_id": 123123,
+    }
+    ```
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
+### Delete Room
+
+### Belum Jadi
+
+-   url: http://localhost:8000/api/room/delete/{id}
+-   method: DELETE
+-   body:
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
+---
+
 ## Notification
 
 ### Create Notification
