@@ -18,7 +18,13 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        //
+        $data = Notification::all();
+
+        if ($data) {
+            return ApiFormatter::createApi($data, 'Succes');
+        } else {
+            return ApiFormatter::createApi('Data is empty', 'Failed');
+        }
     }
 
     /**
@@ -77,9 +83,25 @@ class NotificationController extends Controller
      * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function show(Notification $notification)
+    public function show(Request $request)
     {
-        //
+        if (Notification::where('id', $request->query('id'))->exists()) {
+            $data = Notification::where('id', $request->query('id'))->get();
+        } else if (Notification::where('meet_id', $request->query('idMeet'))->exists()) {
+            $data = Notification::where('meet_id', $request->query('idMeet'))->get();
+        } else if (Notification::where('notificationType', $request->query('notificationType'))->exists()) {
+            $data = Notification::where('notificationType', $request->query('notificationType'))->get();
+        } else if (Notification::where('isRead', $request->query('isRead'))->exists()) {
+            $data = Notification::where('isRead', $request->query('isRead'))->get();
+        } else if ((!$request->query('id') && !$request->query('idMeet') && !$request->query('notificationType') && !$request->query('isRead'))) {
+            return ApiFormatter::createApi('Query Not Found', 'Failed');
+        }
+
+        if (isset($data)) {
+            return ApiFormatter::createApi($data, 'Succesfull');
+        } else {
+            return ApiFormatter::createApi('Data Not Found', 'Failed');
+        }
     }
 
     /**
@@ -125,8 +147,16 @@ class NotificationController extends Controller
      * @param  \App\Models\Notification  $notification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Notification $notification)
+    public function destroy(Notification $notification, $id)
     {
-        //
+        try {
+            if ($notification->where('id', '=', $id)->delete()) {
+                return ApiFormatter::createApi('Data Deleted', 'Succesfull');
+            } else {
+                return ApiFormatter::createApi('Failed Delete Data', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi($error, 'Failed');
+        }
     }
 }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Team;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -78,6 +80,56 @@ class TeamController extends Controller
         }
     }
 
+
+    public function join(Request $request)
+    {
+        $kode = Team::select('team_invite_code')->where('id_team', '=', $request->query('id_team'))->get();
+        $cek = TeamMember::where('id_team', '=', $request->query('id_team'))->where('id_team', '=', $request->query('id_member'))->exists();
+        $kodeRequest = (string)$request->kode;
+        if (!$cek) {
+            if ($kode[0]->team_invite_code == $kodeRequest) {
+                try {
+                    $data = TeamMember::create([
+                        'id_team' => $request->query('id_team'),
+                        'id_member' => $request->query('id_member'),
+                    ]);
+
+                    if ($data) {
+                        return ApiFormatter::createApi($data, 'Succes');
+                    } else {
+                        return ApiFormatter::createApi('Data Cannot Create', 'Failed');
+                    }
+                } catch (Exception $error) {
+                    return ApiFormatter::createApi('Data Cannot Create', $error);
+                }
+            } else {
+                return ApiFormatter::createApi('Error Validation', 'Failed');
+            }
+        } else return ApiFormatter::createApi('User has been added', 'Failed');
+    }
+
+
+    public function deleteMember(Request $request, $id_team, $id_member)
+    {
+        $cek = DB::table('teams')
+            ->join('team_member', 'teams.id_team', '=', 'team_member.id_team')
+            ->select('teams.id_pembuat')
+            ->where('teams.id_pembuat', $request->id_pembuat)
+            ->get();
+        // return $cek;
+        if ($cek->count() > 0) {
+            try {
+                if (TeamMember::where('id_team', '=', $id_team)->where('id_member', '=', $id_member)->delete()) {
+                    return ApiFormatter::createApi('Data Deleted', 'Succesfull');
+                } else {
+                    return ApiFormatter::createApi('Failed Delete Data', 'Failed');
+                }
+            } catch (Exception $error) {
+                return ApiFormatter::createApi($error, 'Failed');
+            }
+        } else return ApiFormatter::createApi('You cannot delete', 'Failed');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -88,15 +140,35 @@ class TeamController extends Controller
     {
         if (Team::where('id_team', $request->query('id'))->exists()) {
             $data = Team::where('id_team', $request->query('id'))->get();
-        } else if (Team::where('id_pembuat', $request->query('idMaster'))->exists()) {
-            $data = Team::where('id_pembuat', $request->query('idMaster'))->get();
+        } else if (Team::where('id_pembuat', $request->query('idCreator'))->exists()) {
+            $data = Team::where('id_pembuat', $request->query('idCreator'))->get();
         } else if (Team::where('name_teams', $request->query('nameTeam'))->exists()) {
             $data = Team::where('name_teams', $request->query('nameTeam'))->get();
-        } else if ((!$request->query('idMaster') && !$request->query('id') && !$request->query('nameTeam'))) {
+        } else if ((!$request->query('idCreator') && !$request->query('id') && !$request->query('nameTeam'))) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
 
         if (isset($data)) {
+            return ApiFormatter::createApi($data, 'Succesfull');
+        } else {
+            return ApiFormatter::createApi('Data Not Found', 'Failed');
+        }
+    }
+
+    public function showMember($id)
+    {
+        $team = Team::where('id_team', $id)->get();
+        $member = TeamMember::select('id_member')->where('id_team', $id)->get();
+        //pluck('id_member');
+
+        // return $member->count();
+        if (isset($team) && ($member->count() > 0)) {
+            $data = [
+                'id_team' => $team[0]->id_team,
+                'name_teams' => $team[0]->name_teams,
+                'member' => $member,
+                'id_pembuat' => $team[0]->id_pembuat,
+            ];
             return ApiFormatter::createApi($data, 'Succesfull');
         } else {
             return ApiFormatter::createApi('Data Not Found', 'Failed');
@@ -123,24 +195,23 @@ class TeamController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = Team::find($id);
+        $team = Team::find($id);
 
-        $user->name = $request->name;
-        $user->role_id = $request->role_id;
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'description' => 'required',
+        ]);
 
-        if (isset($request->password)) {
-            $user->password = $request->password;
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $user->avatarUrl = $request->avatarUrl;
-        $user->address = $request->address;
-        $user->gender = $request->gender;
-        $user->dateofbirth = $request->dateofbirth;
-
-        $user->save();
-        $data = Team::where('nip', '=', $id)->get();
+        $team->name_teams = $request->name;
+        $team->description = $request->description;
+        $team->save();
+        $data = Team::where('id_team', '=', $id)->get();
         if ($data) {
-            return ApiFormatter::createApi($data, 'Succesfull Upadte');
+            return ApiFormatter::createApi($data, 'Succesfull Update');
         } else {
             return ApiFormatter::createApi('Data cannot updated', 'Failed');
         }
@@ -152,8 +223,17 @@ class TeamController extends Controller
      * @param  \App\Models\Team  $team
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Team $team)
+    public function destroy(Team $team, TeamMember $teamMember, $id)
     {
-        //
+        // $result = $team->find($id);
+        try {
+            if ($team->where('id_team', '=', $id)->delete()) {
+                return ApiFormatter::createApi('Data Deleted', 'Succesfull');
+            } else {
+                return ApiFormatter::createApi('Failed Delete Data', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi($error, 'Failed');
+        }
     }
 }
