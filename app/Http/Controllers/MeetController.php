@@ -127,7 +127,7 @@ class MeetController extends Controller
             ];
             return ApiFormatter::createApi($respon, 'Succesfull');
         } else {
-            return ApiFormatter::createApi('Data Not Found', 'Failed');
+            return ApiFormatter::createApi($data, 'Failed');
         }
     }
 
