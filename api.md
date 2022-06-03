@@ -79,12 +79,12 @@
 -   body:
     ```
     {
-        "name": "asdasdad asdasd",
-        "description": asdasd asdasdas",
-        "isOnline": 1 or 2,
-        "limit": 123,
-        "room_id": 123123,
-        "user_id": 123123,
+        "name": "Webinar C++",
+        "description": "Webinar By PENS",
+        "isOnline": 0,
+        "limit": 2,
+        "room_id": 120,
+        "user_id": 3120500xxx,
         "date_start": [
             "yyyy-mm-dd:hh:ss",
             "yyyy-mm-dd:hh:ss"
@@ -92,7 +92,12 @@
         "date_end": [
             "yyyy-mm-dd:hh:ss",
             "yyyy-mm-dd:hh:ss"
-        ]
+        ],
+        "participants":[
+            "3120500xxx",
+            "3120500xxx"
+        ],
+        "teams": []
     }
     ```
 -   headers:
