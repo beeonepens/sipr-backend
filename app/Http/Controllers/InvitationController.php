@@ -110,9 +110,23 @@ class InvitationController extends Controller
      * @param  \App\Models\Invitation  $invitation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Invitation $invitation)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $invite = Invitation::find($id);
+            $invite->isAccepted = $request->isAccepted;
+            $invite->reason = $request->reason;
+            $invite->save();
+
+            $data = Invitation::where('id_invitation', '=', $invite->id_invitation)->get();
+            if ($data) {
+                return ApiFormatter::createApi($data, 'Succes');
+            } else {
+                return ApiFormatter::createApi('Data Update Notification', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi('Data Cannot Create', $error);
+        }
     }
 
     /**
