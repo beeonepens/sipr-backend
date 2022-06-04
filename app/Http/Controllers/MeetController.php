@@ -194,17 +194,24 @@ class MeetController extends Controller
                 ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('meet.user_id', $request->query('user_id'))
                 ->get();
-            $dataParticipan = Invitation::select('id_receiver')->where('id_meet', '=', $request->query('user_id'))->pluck('id_receiver');
         } else if (!$request->query('user_id') && !$request->query('id')) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
 
         if (isset($data) && isset($datatime)) {
-            $respon = [
-                'meet' => $data,
-                'datetime' => $datatime,
-                'participant' => $dataParticipan
-            ];
+            if (isset($dataParticipan)) {
+                $respon = [
+                    'meet' => $data,
+                    'datetime' => $datatime,
+                    'participant' => $dataParticipan
+                ];
+            } else {
+                $respon = [
+                    'meet' => $data,
+                    'datetime' => $datatime,
+                ];
+            }
+
             return ApiFormatter::createApi($respon, 'Succesfull');
         } else {
             return ApiFormatter::createApi($data, 'Failed');
