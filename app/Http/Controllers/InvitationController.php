@@ -19,7 +19,13 @@ class InvitationController extends Controller
      */
     public function index()
     {
-        //
+        $data = Invitation::all();
+
+        if ($data) {
+            return ApiFormatter::createApi($data, 'Succes');
+        } else {
+            return ApiFormatter::createApi('Data is empty', 'Failed');
+        }
     }
 
     /**
@@ -135,8 +141,16 @@ class InvitationController extends Controller
      * @param  \App\Models\Invitation  $invitation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Invitation $invitation)
+    public function destroy(Invitation $invitation, $id)
     {
-        //
+        try {
+            if ($invitation->where('id', '=', $id)->delete()) {
+                return ApiFormatter::createApi('Data Deleted', 'Succesfull');
+            } else {
+                return ApiFormatter::createApi('Failed Delete Data', 'Failed');
+            }
+        } catch (Exception $error) {
+            return ApiFormatter::createApi($error, 'Failed');
+        }
     }
 }
