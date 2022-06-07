@@ -323,9 +323,7 @@
 
 ### Get All Invite
 
-### Belum Jadi
-
--   url: http://localhost:8000/api/room
+-   url: http://localhost:8000/api/invite
 -   method: Get
 -   body:
 -   headers:
@@ -339,30 +337,23 @@
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
-### Update Room
+### Update Invite
 
-### Belum Jadi
-
--   url: http://localhost:8000/api/meet/update
+-   url: http://localhost:8000/api/invite/update/{id}
 -   method: PUT
 -   body:
     ```
     {
-        "name_room": "asdasdad asdasd",
-        "description": "asdasd asdasdas",
-        "isOnline": 0 or 1,
-        "isBOoked": 0 or 1,
-        "user_id": 123123,
+        "isAccepted" : 0,
+        "reason" : "Males pengen belik truk"
     }
     ```
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
-### Delete Room
+### Delete Invite
 
-### Belum Jadi
-
--   url: http://localhost:8000/api/room/delete/{id}
+-   url: http://localhost:8000/api/invite/delete/{id}
 -   method: DELETE
 -   body:
 -   headers:
