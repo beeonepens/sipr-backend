@@ -234,9 +234,17 @@
 -   headers:
     -   Authorization : Bearer |1xxxxxxx
 
+### Get All Team
+
+-   url: http://localhost:8000/api/team
+-   method: Get
+-   body:
+-   headers:
+    -   Authorization : Bearer |1xxxxxxx
+
 ### Get Detail Team
 
--   url: http://127.0.0.1:8000/api/team/show?id=1 atau ?idCreator=3120500044 atau ?nameTeam=D3 ITB
+-   url: http://127.0.0.1:8000/api/team/show?id=1 atau ?idCreator=3120500044 atau ?nameTeam=D3 ITB atau ?id_member=123123
 -   method: Get
 -   body:
 -   headers:
