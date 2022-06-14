@@ -20,7 +20,13 @@ class TeamController extends Controller
      */
     public function index()
     {
-        //
+        $data = Team::all();
+
+        if ($data) {
+            return ApiFormatter::createApi($data, 'Succes');
+        } else {
+            return ApiFormatter::createApi('Data is empty', 'Failed');
+        }
     }
 
     /**
