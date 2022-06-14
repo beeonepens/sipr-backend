@@ -68,7 +68,7 @@ Route::group(['prefix' => 'invite', 'middleware' => 'auth:sanctum'], function ()
 });
 
 Route::group(['prefix' => 'team', 'middleware' => 'auth:sanctum'], function () {
-    // Route::get('/', [TeamController::class, 'index']);
+    Route::get('/', [TeamController::class, 'index']);
     Route::get('show', [TeamController::class, 'show']);
     Route::get('member/{id}', [TeamController::class, 'showMember']);
     Route::post('store', [TeamController::class, 'store']);
