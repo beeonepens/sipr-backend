@@ -76,6 +76,13 @@ class TeamController extends Controller
             ]);
 
             $data = Team::where('id_team', '=', $team->id_team)->get();
+
+            TeamMember::create([
+                'id_team' => $data->id_team,
+                'id_member' => $data->id_pembuat,
+            ]);
+
+
             if ($data) {
                 return ApiFormatter::createApi($data, 'Succes');
             } else {
