@@ -15,14 +15,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        User::insert([
             [
                 'nip' => '1',
                 'name' => 'Admin',
                 'role_id' => 1,
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('admin4321'),
-                'isActive' => true,
+                'isActive' => true
             ],
             [
                 'nip' => '3120500046',
@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
                 'role_id' => 2,
                 'email' => 'fahrimuda1@gmail.com',
                 'password' => Hash::make('fahrimuda123'),
-                'isActive' => true,
+                'isActive' => true
             ],
             [
                 'nip' => '3120500042',
@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
                 'role_id' => 2,
                 'email' => 'mahmud1@gmail.com',
                 'password' => Hash::make('mahmud123'),
-                'isActive' => true,
+                'isActive' => true
             ],
             [
                 'nip' => '3120500033',
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
                 'role_id' => 2,
                 'email' => 'andi1@gmail.com',
                 'password' => Hash::make('andi123'),
-                'isActive' => true,
+                'isActive' => true
             ],
         ]);
     }
