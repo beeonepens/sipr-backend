@@ -75,16 +75,16 @@ class TeamController extends Controller
                 'id_pembuat' => $request->user_id,
             ]);
 
-            $data = Team::where('id_team', '=', $team->id_team)->get();
-
-            TeamMember::create([
-                'id_team' => $data->id_team,
-                'id_member' => $data->id_pembuat,
+            $teamResult = Team::where('id_team', '=', $team->id_team)->get();
+            // return $teamResult;
+            $teamMember = TeamMember::create([
+                'id_team' => $team->id_team,
+                'id_member' => $request->user_id,
             ]);
 
 
-            if ($data) {
-                return ApiFormatter::createApi($data, 'Succes');
+            if ($team && $teamMember) {
+                return ApiFormatter::createApi([$team, $teamMember], 'Succes');
             } else {
                 return ApiFormatter::createApi('Data Cannot Create', 'Failed');
             }
