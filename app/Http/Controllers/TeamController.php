@@ -83,8 +83,8 @@ class TeamController extends Controller
             ]);
 
 
-            if ($team && $teamMember) {
-                return ApiFormatter::createApi([$team, $teamMember], 'Succes');
+            if ($teamResult) {
+                return ApiFormatter::createApi($teamResult, 'Succes');
             } else {
                 return ApiFormatter::createApi('Data Cannot Create', 'Failed');
             }
