@@ -194,6 +194,19 @@ class MeetController extends Controller
                 ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('meet.user_id', $request->query('user_id'))
                 ->get();
+        } else if (Invitation::where('id_receiver', $request->query('participation_id'))->exists()) {
+            //$data = Meet::where('user_id', $request->query('participation_id'))->get();
+            $data = DB::table('meet')
+                ->join('invitations', 'invitations.id_meet', '=', 'meet.id_meet')
+                ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+                ->select('meet.*', 'meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                ->where('invitations.id_receiver', $request->query('participation_id'))
+                ->get();
+            // $datatime = DB::table('meet')
+            //     ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+            //     ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+            //     ->where('invitations.id_receiver', $request->query('user_id'))
+            //     ->get();
         } else if (!$request->query('user_id') && !$request->query('id')) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
@@ -213,6 +226,8 @@ class MeetController extends Controller
             }
 
             return ApiFormatter::createApi($respon, 'Succesfull');
+        } else if (isset($data)) {
+            return ApiFormatter::createApi($data, 'Succesfull');
         } else {
             return ApiFormatter::createApi($data, 'Failed');
         }
