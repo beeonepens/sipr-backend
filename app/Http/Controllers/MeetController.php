@@ -158,6 +158,13 @@ class MeetController extends Controller
                     ]);
                 }
             }
+            Invitation::create([
+                'isAccepted' => 1,
+                'expiredDateTime' => $request->date_start[0],
+                'id_invitee' => $request->user_id,
+                'id_receiver' => $request->user_id,
+                'id_meet' =>  $meet->id_meet,
+            ]);
             $dataParticipan = Invitation::select('id_receiver')->where('id_meet', '=', $meet->id_meet)->pluck('id_receiver');
 
             // var_dump($data); die;
@@ -198,15 +205,16 @@ class MeetController extends Controller
             //$data = Meet::where('user_id', $request->query('participation_id'))->get();
             $data = DB::table('meet')
                 ->join('invitations', 'invitations.id_meet', '=', 'meet.id_meet')
-                ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
-                ->select('meet.*', 'meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                // ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+                // ->select('meet.*', 'meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('invitations.id_receiver', $request->query('participation_id'))
                 ->get();
-            // $datatime = DB::table('meet')
-            //     ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
-            //     ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
-            //     ->where('invitations.id_receiver', $request->query('user_id'))
-            //     ->get();
+
+            $datatime = DB::table('meet')
+                ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+                ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                ->where('meet.id_meet', $data[0]->id_meet)
+                ->get();
         } else if (!$request->query('user_id') && !$request->query('id')) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
