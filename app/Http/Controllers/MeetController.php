@@ -207,7 +207,7 @@ class MeetController extends Controller
                 ->get();
             $i = 0;
             foreach ($data as $datas) {
-                $datatime[$i] = DB::table('meet')
+                $datatime = DB::table('meet')
                     ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
                     ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                     ->where('meet.id_meet', $datas->id_meet)
