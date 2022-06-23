@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Helpers\ApiFormatter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use stdClass;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeamController extends Controller
@@ -159,24 +160,30 @@ class TeamController extends Controller
             $data = Team::where('name_teams', $request->query('nameTeam'))->get();
         } else if ($request->query('id_member')) {
             //$data = Team::where('name_teams', $request->query('nameTeam'))->get();
-            $data =  DB::table('teams')
+            $team =  DB::table('teams')
                 ->join('team_member', 'teams.id_team', '=', 'team_member.id_team')
                 ->select('teams.id_team', 'teams.name_teams', 'teams.description')
                 ->where('team_member.id_member', $request->query('id_member'))
                 ->get();
             $i = 0;
-            foreach ($data as $datas) {
+            foreach ($team as $teams) {
                 $count[$i] = DB::table('teams')
                     ->join('team_member', 'teams.id_team', '=', 'team_member.id_team')
-                    ->where('team_member.id_team', $datas->id_team)
+                    ->where('team_member.id_team', $teams->id_team)
                     ->count();
+                // $data = new stdClass();
+                // $data->$data[$i]->id_team = $teams->id_team;
+                // $data->$data[$i]->name_team = $teams->name_team;
+                // $data->$data[$i]->description = $teams->description;
+                // $data->$data[$i]->member = $teams->member;
+                //$data->put('member', $count[$i]);
                 $data[$i] = [
-                    [
-                        'id_team' => $datas->id_team,
-                        'name_team' => $datas->name_teams,
-                        'description' => $datas->description,
-                        'member' => $count[$i]
-                    ]
+
+                    'id_team' => $teams->id_team,
+                    'name_team' => $teams->name_teams,
+                    'description' => $teams->description,
+                    'member' => $count[$i]
+
                 ];
                 $i++;
             }
