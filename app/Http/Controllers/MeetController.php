@@ -213,7 +213,7 @@ class MeetController extends Controller
                     ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                     ->where('meet.id_meet', $datas->id_meet)
                     ->get();
-                $datatime->put('meet' . $datas->id_meet, $result);
+                $datatime[$i] = $result;
                 $i++;
             }
         } else if (!$request->query('user_id') && !$request->query('id')) {
