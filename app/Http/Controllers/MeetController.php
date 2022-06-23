@@ -160,13 +160,6 @@ class MeetController extends Controller
                     ]);
                 }
             }
-            Invitation::create([
-                'isAccepted' => 1,
-                'expiredDateTime' => $request->date_start[0],
-                'id_invitee' => $request->user_id,
-                'id_receiver' => $request->user_id,
-                'id_meet' =>  $meet->id_meet,
-            ]);
             $dataParticipan = Invitation::select('id_receiver')->where('id_meet', '=', $meet->id_meet)->pluck('id_receiver');
 
             // var_dump($data); die;
@@ -206,26 +199,19 @@ class MeetController extends Controller
         } else if (Invitation::where('id_receiver', $request->query('participation_id'))->exists()) {
             //$data = Meet::where('user_id', $request->query('participation_id'))->get();
             $data = DB::table('meet')
-                ->select('meet.id_meet', 'meet.name_meeting', 'meet.description')
+                // ->select('meet.id_meet', 'meet.name_meeting', 'meet.description')
                 ->join('invitations', 'invitations.id_meet', '=', 'meet.id_meet')
+                //->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+                //->select('meet.*', 'meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('invitations.id_receiver', $request->query('participation_id'))
                 ->get();
             $i = 0;
-
             foreach ($data as $datas) {
-                $count[$i] = DB::table('meet')
-                    ->join('invitations', 'invitations.id_meet', '=', 'meet.id_meet')
-                    ->where('invitations.id_meet', $datas->id_meet)
-                    ->where('invitations.isAccepted', '=', 1)
-                    ->count();
-                $data[$i] = [
-                    [
-                        'id_meet' => $datas->id_meet,
-                        'name' => $datas->name_meeting,
-                        'description' => $datas->description,
-                        'participant' => $count[$i]
-                    ]
-                ];
+                $datatime[$i] = DB::table('meet')
+                    ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
+                    ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
+                    ->where('meet.id_meet', $datas->id_meet)
+                    ->get();
                 $i++;
             }
         } else if (!$request->query('user_id') && !$request->query('id')) {

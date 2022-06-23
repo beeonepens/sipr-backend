@@ -161,9 +161,25 @@ class TeamController extends Controller
             //$data = Team::where('name_teams', $request->query('nameTeam'))->get();
             $data =  DB::table('teams')
                 ->join('team_member', 'teams.id_team', '=', 'team_member.id_team')
-                ->select('teams.id_team', 'teams.name_teams')
+                ->select('teams.id_team', 'teams.name_teams', 'teams.description')
                 ->where('team_member.id_member', $request->query('id_member'))
                 ->get();
+            $i = 0;
+            foreach ($data as $datas) {
+                $count[$i] = DB::table('teams')
+                    ->join('team_member', 'teams.id_team', '=', 'team_member.id_team')
+                    ->where('team_member.id_team', $datas->id_team)
+                    ->count();
+                $data[$i] = [
+                    [
+                        'id_team' => $datas->id_team,
+                        'name_team' => $datas->name_teams,
+                        'description' => $datas->description,
+                        'member' => $count[$i]
+                    ]
+                ];
+                $i++;
+            }
         } else if ((!$request->query('idCreator') && !$request->query('id') && !$request->query('nameTeam'))) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
