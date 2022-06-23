@@ -97,14 +97,15 @@ class TeamController extends Controller
 
     public function join(Request $request)
     {
-        $kode = Team::select('team_invite_code')->where('id_team', '=', $request->query('id_team'))->get();
-        $cek = TeamMember::where('id_team', '=', $request->query('id_team'))->where('id_team', '=', $request->query('id_member'))->exists();
+        //$kode = Team::select('team_invite_code')->where('id_team', '=', $request->query('id_team'))->get();
+        $team = Team::where('team_invite_code', '=', (string)$request->kode)->get();
+        $cek = TeamMember::where('id_team', '=', $team[0]->id_team)->where('id_member', '=', $request->query('id_member'))->exists();
         $kodeRequest = (string)$request->kode;
         if (!$cek) {
-            if ($kode[0]->team_invite_code == $kodeRequest) {
+            if ($team[0]->team_invite_code == $kodeRequest) {
                 try {
                     $data = TeamMember::create([
-                        'id_team' => $request->query('id_team'),
+                        'id_team' => $team[0]->id_team,
                         'id_member' => $request->query('id_member'),
                     ]);
 
