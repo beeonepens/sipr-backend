@@ -206,12 +206,14 @@ class MeetController extends Controller
                 ->where('invitations.id_receiver', $request->query('participation_id'))
                 ->get();
             $i = 0;
+            $datatime = collect();
             foreach ($data as $datas) {
-                $datatime = DB::table('meet')
+                $result = DB::table('meet')
                     ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
                     ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                     ->where('meet.id_meet', $datas->id_meet)
                     ->get();
+                $datatime->put('meet' . $datas->id_meet, $result);
                 $i++;
             }
         } else if (!$request->query('user_id') && !$request->query('id')) {
