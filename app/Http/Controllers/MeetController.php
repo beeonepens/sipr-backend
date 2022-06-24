@@ -273,7 +273,7 @@ class MeetController extends Controller
         try {
             $old_meet = Meet::find($id);
             $meet = Meet::find($id);
-            $meet->name_meeting = $request->name;
+            $meet->name_meeting = $request->name_meeting;
             $meet->description = $request->description;
             $meet->isOnline =  $request->isOnline;
             $meet->limit = $request->limit;
