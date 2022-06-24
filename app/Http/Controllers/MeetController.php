@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
+use phpDocumentor\Reflection\DocBlock\Tag;
 
 class MeetController extends Controller
 {
@@ -188,7 +189,17 @@ class MeetController extends Controller
                 ->select('meet_date_time.id_meet', 'meet_date_time.start_datetime', 'meet_date_time.end_datetime')
                 ->where('meet.id_meet', $request->query('id'))
                 ->get();
-            $dataParticipan = Invitation::select('id_receiver')->where('id_meet', '=', $request->query('id'))->pluck('id_receiver');
+            $dataParticipan = DB::table('invitations')
+                ->join('users', 'invitations.id_receiver', '=', 'users.nip')
+                ->select('invitations.id_receiver', 'users.name')
+                ->where('invitations.id_meet', '=', $request->query('id'))
+                ->get();
+            //$dataParticipan = Tag::getName(['id_receiver as user_id']);
+            // $dataParticipan->map(function ($dataParticipan) {
+            //     $dataParticipan->id_receiver = $dataParticipan->id_receiver->keyBy('user_id');
+            //     return $dataParticipan;
+            // });
+            // $dataParticipan = Invitation::select('id_receiver')->where('id_meet', '=', $request->query('id'))->pluck('id_receiver');
         } else if (Meet::where('user_id', $request->query('user_id'))->exists()) {
             $data = Meet::where('user_id', $request->query('user_id'))->get();
             $datatime = DB::table('meet')
