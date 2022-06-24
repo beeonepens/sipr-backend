@@ -206,7 +206,7 @@ class MeetController extends Controller
                 ->where('invitations.id_receiver', $request->query('participation_id'))
                 ->get();
             $i = 0;
-            $datatime = collect();
+            //$datatime = collect();
             foreach ($data as $datas) {
                 $result = DB::table('meet')
                     ->join('meet_date_time', 'meet.id_meet', '=', 'meet_date_time.id_meet')
@@ -216,7 +216,7 @@ class MeetController extends Controller
                 $datatime[$i] = $result;
                 $i++;
             }
-        } else if (!$request->query('user_id') && !$request->query('id')) {
+        } else if (!$request->query('user_id') && !$request->query('id') && !$request->query('participation_id')) {
             return ApiFormatter::createApi('Query Not Found', 'Failed');
         }
 
@@ -233,7 +233,6 @@ class MeetController extends Controller
                     'datetime' => $datatime,
                 ];
             }
-
             return ApiFormatter::createApi($respon, 'Succesfull');
         } else if (isset($data)) {
             return ApiFormatter::createApi($data, 'Succesfull');
