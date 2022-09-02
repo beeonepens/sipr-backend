@@ -297,6 +297,8 @@ class MeetController extends Controller
                 $room_new->save();
             }
 
+            dd("Test");
+
             for ($i = 0; $i < $request->limit; $i++) {
                 DateMeet::where('id_meet', $id)
                     ->update([
